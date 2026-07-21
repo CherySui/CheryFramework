@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+Mod/out/
+artifacts/
+build/
+*.runtime.log

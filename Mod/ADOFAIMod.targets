@@ -1,0 +1,34 @@
+<Project>
+  <PropertyGroup>
+    <GameDir>$([System.IO.Path]::GetDirectoryName($(GameExePath)))</GameDir>
+    <GameFileName>$([System.IO.Path]::GetFileNameWithoutExtension($(GameExePath)))</GameFileName>
+    <ManagedAssembliesDir>$(GameDir)\$(GameFileName)_Data\Managed</ManagedAssembliesDir>
+  </PropertyGroup>
+
+  <Target Name="ValidateGameExePath" BeforeTargets="Build">
+    <Error Text="找不到游戏文件：$(GameExePath)" Condition="'$(GameExePath)' != '' AND !Exists('$(GameExePath)')" />
+  </Target>
+
+  <Target Name="CopyToOut" AfterTargets="Build">
+    <PropertyGroup>
+      <FrameworkOutDir>$(ProjectDir)out\</FrameworkOutDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(FrameworkOutDir)" Condition="Exists('$(FrameworkOutDir)')" />
+    <MakeDir Directories="$(FrameworkOutDir)" />
+    <MakeDir Directories="$(FrameworkOutDir)Resources" />
+    <ItemGroup>
+      <FrameworkFiles Include="$(OutputPath)$(AssemblyName).dll" />
+      <FrameworkFiles Include="$(OutputPath)$(AssemblyName).pdb" Condition="Exists('$(OutputPath)$(AssemblyName).pdb')" />
+      <FrameworkFiles Include="$(OutputPath)cimgui.dll" Condition="Exists('$(OutputPath)cimgui.dll')" />
+      <FrameworkFiles Include="$(OutputPath)ImGui.NET.dll" Condition="Exists('$(OutputPath)ImGui.NET.dll')" />
+      <FrameworkFiles Include="$(OutputPath)System.Buffers.dll" Condition="Exists('$(OutputPath)System.Buffers.dll')" />
+      <FrameworkFiles Include="$(OutputPath)System.Numerics.Vectors.dll" Condition="Exists('$(OutputPath)System.Numerics.Vectors.dll')" />
+      <FrameworkFiles Include="$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll" Condition="Exists('$(OutputPath)System.Runtime.CompilerServices.Unsafe.dll')" />
+      <FrameworkFiles Include="$(ProjectDir)Info.json" />
+      <FrameworkResources Include="$(ProjectDir)Resources\**\*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(FrameworkFiles)" DestinationFolder="$(FrameworkOutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(FrameworkResources)" DestinationFolder="$(FrameworkOutDir)Resources\%(RecursiveDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

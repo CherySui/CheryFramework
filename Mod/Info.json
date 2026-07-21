@@ -1,0 +1,10 @@
+{
+  "Id": "CheryFramework",
+  "DisplayName": "Chery Framework",
+  "Author": "Chery",
+  "Version": "1.0.0",
+  "AssemblyName": "CheryFramework.dll",
+  "EntryMethod": "CheryFramework.Main.Load",
+  "HomePage": "",
+  "Repository": ""
+}
